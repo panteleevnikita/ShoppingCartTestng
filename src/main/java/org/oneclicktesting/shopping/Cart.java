@@ -1,6 +1,9 @@
 package org.oneclicktesting.shopping;
 
 public interface Cart {
-    public int getCartProductQuantity(int id);
-    public void removeProductFromCard(int id);
+    int getCartProductQuantity(int id);
+    int getCartProductPrice(int id);
+    int getCartTotalPrice();
+    void removeProductFromCard(int id);
+    int getProductsCount();
 }

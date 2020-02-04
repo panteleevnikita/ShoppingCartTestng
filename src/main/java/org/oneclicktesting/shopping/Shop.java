@@ -1,5 +1,7 @@
 package org.oneclicktesting.shopping;
 
 public interface Shop {
-    public void addFeaturedProductToCart(int id, int quantity);
+    void addFeaturedProductToCart(int id);
+    float getProductPrice(int id);
+
 }

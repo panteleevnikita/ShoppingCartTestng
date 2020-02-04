@@ -14,8 +14,6 @@ public class CartTest {
     Shop shop;
     private WebDriver driver;
 
-    private final String BASE_URL = "http://automationpractice.com/index.php";
-
     @BeforeClass
     public void setUp() {
         System.out.println("Setting up headless chrome");
@@ -31,7 +29,6 @@ public class CartTest {
     @AfterClass
     public void tearDown() {
         System.out.println("Closing headless chrome");
-        driver.close();
         driver.quit();
     }
 
@@ -40,12 +37,11 @@ public class CartTest {
         int quantity = 1;
         int id = 1;
 
-        shop.addFeaturedProductToCart(id, quantity);
+        shop.addFeaturedProductToCart(id);
         int cartQuantity = cart.getCartProductQuantity(id);
 
         Assert.assertEquals(cartQuantity, quantity);
         cart.removeProductFromCard(id);
-//        getCartProductQuantity(id);
     }
 
 }
