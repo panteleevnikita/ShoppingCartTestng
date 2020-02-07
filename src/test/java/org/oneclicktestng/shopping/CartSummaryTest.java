@@ -49,7 +49,21 @@ public class CartSummaryTest {
 
         this.shop.addFeaturedProductToCart(id);
         Assert.assertEquals(cartSummary.getCartProductQuantity(id), quantity);
-        this.cartSummary.removeProductFromCard(id);
+        this.cartSummary.removeProductFromCard(id, 1);
+    }
+
+    @Test
+    public void testAddMultipleProducts() {
+        int quantity = 3;
+        for (int i = 1; i <= quantity; i++) {
+            this.shop.addFeaturedProductToCart(i);
+        }
+
+        Assert.assertEquals(cartSummary.getProductsCount(), quantity);
+
+        for (int i = 0; i < quantity; i++) {
+            this.cartSummary.removeProductFromCard(1, quantity-i);
+        }
     }
 
     @Test
@@ -57,10 +71,10 @@ public class CartSummaryTest {
         int quantity = 3;
         int id = 1;
 
-        for (int i = 0; i < quantity; i++) {
+        for (int i = 1; i <= quantity; i++) {
             this.shop.addFeaturedProductToCart(id);
         }
         Assert.assertEquals(cartSummary.getCartProductQuantity(id), quantity);
-        this.cartSummary.removeProductFromCard(id);
+        this.cartSummary.removeProductFromCard(id, 1);
     }
 }

@@ -29,7 +29,7 @@ public class SeleniumCartSummary implements CartSummary {
     }
 
     @Override
-    public void removeProductFromCard(int id) {
+    public void removeProductFromCard(int id, int productCount) {
         driver.get(CART_SUMMARY_URL);
 
         String deleteElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//td[@data-title='Delete']/div/a[@title='Delete']";
@@ -38,31 +38,55 @@ public class SeleniumCartSummary implements CartSummary {
         WebElement deleteLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(deleteXpath)));
         deleteLink.click();
 
-        wait.until(ExpectedConditions.numberOfElementsToBe(By.xpath(deleteXpath), 0));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.xpath("//table[@id='cart_summary']//tr[contains(@class, 'cart_item')]"), productCount-1));
     }
 
     @Override
-    public int getCartProductPrice(int id) {
-        return 0;
+    public float getCartProductPrice(int id) {
+        driver.get(CART_SUMMARY_URL);
+
+        String productPriceTemplate = "//table[@id='cart_summary']//tr[%d]//span[@class='price']/span[@class='price']";
+        String productPricePath = String.format(productPriceTemplate, id);
+        WebElement productPrice = driver.findElement(By.xpath(productPricePath));
+
+        return Float.parseFloat(productPrice.getText().trim().replaceAll("$", ""));
     }
 
     @Override
-    public int getCartTotalPrice() {
-        return 0;
+    public float getCartTotalPrice() {
+        driver.get(CART_SUMMARY_URL);
+
+        WebElement totalPrice = driver.findElement(By.id("total_product"));
+        return Integer.parseInt(totalPrice.getText().trim().replaceAll("$", ""));
     }
 
     @Override
     public int getProductsCount() {
-        return 0;
+        driver.get(CART_SUMMARY_URL);
+
+        String cartProductPath = "//table[@id='cart_summary']//tr[contains(@class, 'cart_item')]";
+        return driver.findElements(By.xpath(cartProductPath)).size();
     }
 
     @Override
-    public void incrementProduct() {
+    public void incrementProduct(int id) {
+        driver.get(CART_SUMMARY_URL);
 
+        String deleteElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title, 'Add']";
+        String deleteXpath = String.format(deleteElementXpathTemplate, id);
+
+        WebElement deleteLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(deleteXpath)));
+        deleteLink.click();
     }
 
     @Override
-    public void decrementProduct() {
+    public void decrementProduct(int id) {
+        driver.get(CART_SUMMARY_URL);
 
+        String deleteElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title, 'Subtract']";
+        String deleteXpath = String.format(deleteElementXpathTemplate, id);
+
+        WebElement deleteLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(deleteXpath)));
+        deleteLink.click();
     }
 }

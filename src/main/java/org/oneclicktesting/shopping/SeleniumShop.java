@@ -21,13 +21,13 @@ public class SeleniumShop implements Shop {
     public void addFeaturedProductToCart(int id) {
         driver.get(BASE_URL);
 
-        String featuredProductBlockTemplate = "#homefeatured > .ajax_block_product:nth-child(%d)";
-        String featuredProductTemplate = "#homefeatured > .ajax_block_product:nth-child(%d) .button:nth-child(%d) > span";
+        String featuredProductBlockTemplate = "//ul[@id='homefeatured']/li[%d]";
+        String featuredProductTemplate = "//ul[@id='homefeatured']/li[%d]//a[contains(@class, 'ajax_add_to_cart_button')]";
         String firstFeaturedProduct = String.format(featuredProductTemplate, id, id);
         String firstFeaturedProductBlock = String.format(featuredProductBlockTemplate, id);
 
-        WebElement productBlock = driver.findElement(By.cssSelector(firstFeaturedProductBlock));
-        WebElement addLink = driver.findElement(By.cssSelector(firstFeaturedProduct));
+        WebElement productBlock = driver.findElement(By.xpath(firstFeaturedProductBlock));
+        WebElement addLink = driver.findElement(By.xpath(firstFeaturedProduct));
         WebDriverWait wait = new WebDriverWait(driver, 5);
 
         Actions action = new Actions(driver);
@@ -41,6 +41,10 @@ public class SeleniumShop implements Shop {
 
     @Override
     public float getProductPrice(int id) {
-        return 0;
+        String productPriceTemplate = "//ul[@id='homefeatured']/li[%d]/span[@itemprop='price']";
+        String productPricePath = String.format(productPriceTemplate, id);
+        WebElement productPrice = driver.findElement(By.xpath(productPricePath));
+
+        return Float.parseFloat(productPrice.getAttribute("value").trim().replaceAll("$", ""));
     }
 }

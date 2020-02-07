@@ -21,28 +21,48 @@ public class SeleniumCart implements Cart {
 
     @Override
     public int getCartProductQuantity(int id) {
-        return 1;
+        openCart();
+
+        String quantityTemplate = "//dl[@class='products']/dt[%d]//span[@class='quantity']";
+        String quantityPath = String.format(quantityTemplate, id);
+        WebElement quantityElement = driver.findElement(By.xpath(quantityPath));
+
+        return Integer.parseInt(quantityElement.getText());
     }
 
     @Override
-    public int getCartProductPrice(int id) {
-        return 0;
+    public float getCartProductPrice(int id) {
+        String productPriceTemplate = "//dl[@class='products']/dt[%d]//span[@class='price']";
+        String productPricePath = String.format(productPriceTemplate, id);
+        WebElement productPrice = driver.findElement(By.xpath(productPricePath));
+
+        return Float.parseFloat(productPrice.getText().trim().replaceAll("$", ""));
     }
 
     @Override
-    public int getCartTotalPrice() {
-        return 0;
+    public float getCartTotalPrice() {
+        String cartProductPath = "//dl[@class='products']//span[contains(@class, 'cart_block_total')]";
+        WebElement totalPrice = driver.findElement(By.xpath(cartProductPath));
+
+        return Float.parseFloat(totalPrice.getText().trim().replaceAll("$", ""));
     }
 
     @Override
     public void removeProductFromCard(int id) {
         openCart();
 
+        String deleteLinkTemplate = "//dl[@class='products']/dt[%d]//a[@class='ajax_cart_block_remove_link']";
+        String deleteLinkPath = String.format(deleteLinkTemplate, id);
+
+        WebElement deleteLink = driver.findElement(By.xpath(deleteLinkPath));
+        wait.until(ExpectedConditions.visibilityOf(deleteLink));
+        deleteLink.click();
     }
 
     @Override
     public int getProductsCount() {
-        return 0;
+        String cartProductPath = "//dl[@class='products']/dt";
+        return driver.findElements(By.xpath(cartProductPath)).size();
     }
 
     private void openCart() {
@@ -57,5 +77,4 @@ public class SeleniumCart implements Cart {
         action.moveToElement(cartTitleElement).build().perform();
         wait.until(ExpectedConditions.visibilityOf(cartBlockElement));
     }
-
 }
