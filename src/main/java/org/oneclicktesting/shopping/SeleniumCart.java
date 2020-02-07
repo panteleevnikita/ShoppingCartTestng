@@ -21,30 +21,33 @@ public class SeleniumCart implements Cart {
 
     @Override
     public int getCartProductQuantity(int id) {
-        openCart();
+        driver.get(BASE_URL);
 
         String quantityTemplate = "//dl[@class='products']/dt[%d]//span[@class='quantity']";
         String quantityPath = String.format(quantityTemplate, id);
         WebElement quantityElement = driver.findElement(By.xpath(quantityPath));
 
-        return Integer.parseInt(quantityElement.getText());
+        return Integer.parseInt(quantityElement.getAttribute("textContent"));
     }
 
     @Override
     public float getCartProductPrice(int id) {
+        driver.get(BASE_URL);
         String productPriceTemplate = "//dl[@class='products']/dt[%d]//span[@class='price']";
         String productPricePath = String.format(productPriceTemplate, id);
         WebElement productPrice = driver.findElement(By.xpath(productPricePath));
 
-        return Float.parseFloat(productPrice.getText().trim().replaceAll("$", ""));
+        return Float.parseFloat(productPrice.getAttribute("textContent").trim().replaceAll("\\$", ""));
     }
 
     @Override
     public float getCartTotalPrice() {
-        String cartProductPath = "//dl[@class='products']//span[contains(@class, 'cart_block_total')]";
+        String cartProductPath = "//span[@class='ajax_cart_total']";
         WebElement totalPrice = driver.findElement(By.xpath(cartProductPath));
 
-        return Float.parseFloat(totalPrice.getText().trim().replaceAll("$", ""));
+        float totalPriceValue = Float.parseFloat(totalPrice.getAttribute("textContent").trim().replaceAll("\\$", ""));
+
+        return totalPriceValue;
     }
 
     @Override
@@ -61,6 +64,7 @@ public class SeleniumCart implements Cart {
 
     @Override
     public int getProductsCount() {
+        driver.get(BASE_URL);
         String cartProductPath = "//dl[@class='products']/dt";
         return driver.findElements(By.xpath(cartProductPath)).size();
     }

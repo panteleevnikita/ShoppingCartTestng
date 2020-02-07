@@ -7,5 +7,5 @@ public interface CartSummary {
     float getCartTotalPrice();
     int getProductsCount();
     void incrementProduct(int id);
-    void decrementProduct(int id);
+    void decreaseProduct(int id);
 }

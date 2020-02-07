@@ -77,4 +77,64 @@ public class CartSummaryTest {
         Assert.assertEquals(cartSummary.getCartProductQuantity(id), quantity);
         this.cartSummary.removeProductFromCard(id, 1);
     }
+
+    @Test
+    public void testIncrementProduct() {
+        int incrementQuantity = 2;
+        int id = 2;
+        this.shop.addFeaturedProductToCart(id);
+
+        for (int i = 1; i <= incrementQuantity; i++) {
+            this.cartSummary.incrementProduct(1);
+        }
+
+        Assert.assertEquals(cartSummary.getCartProductQuantity(1), incrementQuantity + 1);
+
+        this.cartSummary.removeProductFromCard(1, 1);
+    }
+
+    @Test
+    public void testDecrementProduct() {
+        int decrementQuantity = 2;
+        int totalQuantity = 3;
+        int id = 3;
+
+        for (int i = 0; i < totalQuantity; i++) {
+            this.shop.addFeaturedProductToCart(id);
+        }
+
+        for (int i = 1; i <= decrementQuantity; i++) {
+            this.cartSummary.decreaseProduct(1);
+        }
+        Assert.assertEquals(cartSummary.getCartProductQuantity(1), totalQuantity - decrementQuantity);
+        this.cartSummary.removeProductFromCard(1, 1);
+    }
+
+    @Test
+    public void testProductPrice() {
+        int id = 3;
+        this.shop.addFeaturedProductToCart(id);
+
+        Assert.assertEquals(cartSummary.getCartProductPrice(1), this.shop.getProductPrice(id));
+
+        this.cartSummary.removeProductFromCard(1, 1);
+    }
+
+    @Test
+    public void testTotalPriceOfMultipleProducts() {
+        int totalQuantity = 3;
+
+        float totalPrice = 0;
+
+        for (int i = 1; i <= totalQuantity; i++) {
+            this.shop.addFeaturedProductToCart(i);
+            totalPrice += this.shop.getProductPrice(i);
+        }
+
+        Assert.assertEquals(cartSummary.getCartTotalPrice(), totalPrice);
+
+        for (int i = 0; i < totalQuantity; i++) {
+            this.cartSummary.removeProductFromCard(1, totalQuantity - i);
+        }
+    }
 }

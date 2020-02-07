@@ -49,7 +49,7 @@ public class SeleniumCartSummary implements CartSummary {
         String productPricePath = String.format(productPriceTemplate, id);
         WebElement productPrice = driver.findElement(By.xpath(productPricePath));
 
-        return Float.parseFloat(productPrice.getText().trim().replaceAll("$", ""));
+        return Float.parseFloat(productPrice.getText().trim().replaceAll("\\$", ""));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SeleniumCartSummary implements CartSummary {
         driver.get(CART_SUMMARY_URL);
 
         WebElement totalPrice = driver.findElement(By.id("total_product"));
-        return Integer.parseInt(totalPrice.getText().trim().replaceAll("$", ""));
+        return Float.parseFloat(totalPrice.getText().trim().replaceAll("\\$", ""));
     }
 
     @Override
@@ -72,21 +72,22 @@ public class SeleniumCartSummary implements CartSummary {
     public void incrementProduct(int id) {
         driver.get(CART_SUMMARY_URL);
 
-        String deleteElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title, 'Add']";
-        String deleteXpath = String.format(deleteElementXpathTemplate, id);
+        String incrementElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title='Add']";
+        String incrementXpath = String.format(incrementElementXpathTemplate, id);
 
-        WebElement deleteLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(deleteXpath)));
-        deleteLink.click();
+        WebElement incrementLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(incrementXpath)));
+        incrementLink.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(incrementXpath)));
     }
 
     @Override
-    public void decrementProduct(int id) {
+    public void decreaseProduct(int id) {
         driver.get(CART_SUMMARY_URL);
+        String decreaseElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title='Subtract']";
+        String decreaseXpath = String.format(decreaseElementXpathTemplate, id);
 
-        String deleteElementXpathTemplate = "//table[@id='cart_summary']/tbody/tr[%d]//a[@title, 'Subtract']";
-        String deleteXpath = String.format(deleteElementXpathTemplate, id);
-
-        WebElement deleteLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(deleteXpath)));
-        deleteLink.click();
+        WebElement decreaseLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(decreaseXpath)));
+        decreaseLink.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(decreaseXpath)));
     }
 }

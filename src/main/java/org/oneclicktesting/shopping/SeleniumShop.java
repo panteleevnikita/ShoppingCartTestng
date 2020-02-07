@@ -41,10 +41,12 @@ public class SeleniumShop implements Shop {
 
     @Override
     public float getProductPrice(int id) {
-        String productPriceTemplate = "//ul[@id='homefeatured']/li[%d]/span[@itemprop='price']";
+        driver.get(BASE_URL);
+
+        String productPriceTemplate = "//ul[@id='homefeatured']/li[%d]//div[@class='right-block']//span[@itemprop='price']";
         String productPricePath = String.format(productPriceTemplate, id);
         WebElement productPrice = driver.findElement(By.xpath(productPricePath));
 
-        return Float.parseFloat(productPrice.getAttribute("value").trim().replaceAll("$", ""));
+        return Float.parseFloat(productPrice.getText().trim().replaceAll("\\$", ""));
     }
 }
