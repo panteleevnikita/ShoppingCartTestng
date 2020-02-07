@@ -22,7 +22,7 @@ public class CartSummaryTest {
     public void setUp() {
         System.out.println("Setting up headless chrome");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--window-size=1920,1200", "--ignore-certificate-errors");
+        options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors");
         driver = new ChromeDriver(options);
 
         System.out.println("Setting up selenium services");
